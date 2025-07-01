@@ -46,15 +46,6 @@ export class UserService {
     return await this.userRepository.update(user);
   }
 
-  async deleteUser(id: string): Promise<void> {
-    const user = await this.userRepository.findById(id);
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    await this.userRepository.delete(id);
-  }
-
   async validatePassword(user: UserEntity, password: string): Promise<boolean> {
     return await bcrypt.compare(password, user.password);
   }

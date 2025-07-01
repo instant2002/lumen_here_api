@@ -27,7 +27,6 @@ type Query {
 
 type Mutation {
   createUser(data: CreateUserInput!): UserOutput!
-  deleteUser(id: String!): Boolean!
   login(input: LoginInput!): AuthOutput!
 }
 

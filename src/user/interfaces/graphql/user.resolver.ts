@@ -26,10 +26,4 @@ export class UserResolver {
     const user = await this.userService.createUser(data.email, data.password, data.name);
     return UserResponseDTO.fromUser(user);
   }
-
-  @Mutation(() => Boolean)
-  async deleteUser(@Args('id') id: string): Promise<boolean> {
-    await this.userService.deleteUser(id);
-    return true;
-  }
 }

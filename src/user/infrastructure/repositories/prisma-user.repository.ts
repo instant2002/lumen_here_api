@@ -60,10 +60,4 @@ export class PrismaUserRepository implements IUserRepository {
 
     return UserEntity.revertToUserEntity(userData);
   }
-
-  async delete(id: string): Promise<void> {
-    await this.prisma.user.delete({
-      where: { id },
-    });
-  }
 }
