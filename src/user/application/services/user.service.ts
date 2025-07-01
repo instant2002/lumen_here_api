@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 
-import { User } from '../../domain/entities/user.entity';
+import { UserEntity } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 
 import { IUserService } from './user.service.interface';
@@ -13,7 +13,7 @@ export class UserService implements IUserService {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async createUser(email: string, password: string, name?: string): Promise<User> {
+  async createUser(email: string, password: string, name?: string): Promise<UserEntity> {
     // Check if user already exists
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
@@ -24,20 +24,20 @@ export class UserService implements IUserService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    const user = User.create(this.generateId(), email, hashedPassword, name);
+    const user = UserEntity.create(this.generateId(), email, hashedPassword, name);
 
     return await this.userRepository.save(user);
   }
 
-  async getUserById(id: string): Promise<User | null> {
+  async getUserById(id: string): Promise<UserEntity | null> {
     return await this.userRepository.findById(id);
   }
 
-  async getUserByEmail(email: string): Promise<User | null> {
+  async getUserByEmail(email: string): Promise<UserEntity | null> {
     return await this.userRepository.findByEmail(email);
   }
 
-  async updateUserName(id: string, name: string): Promise<User> {
+  async updateUserName(id: string, name: string): Promise<UserEntity> {
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new Error('User not found');
@@ -47,7 +47,7 @@ export class UserService implements IUserService {
     return await this.userRepository.update(user);
   }
 
-  async updateUserPassword(id: string, password: string): Promise<User> {
+  async updateUserPassword(id: string, password: string): Promise<UserEntity> {
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new Error('User not found');
@@ -67,7 +67,7 @@ export class UserService implements IUserService {
     await this.userRepository.delete(id);
   }
 
-  async validatePassword(user: User, password: string): Promise<boolean> {
+  async validatePassword(user: UserEntity, password: string): Promise<boolean> {
     return await bcrypt.compare(password, user.getPassword());
   }
 

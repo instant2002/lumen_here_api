@@ -1,4 +1,4 @@
-export class User {
+export class UserEntity {
   constructor(
     public readonly id: string,
     public email: string,
@@ -20,7 +20,7 @@ export class User {
   }
 
   // Factory method
-  static create(id: string, email: string, password: string, name?: string): User {
-    return new User(id, email, password, name, new Date(), new Date());
+  static create(id: string, email: string, password: string, name?: string): UserEntity {
+    return new UserEntity(id, email, password, name, new Date(), new Date());
   }
 }

@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from '../../user/application/services/user.service';
-import { User } from '../../user/domain/entities/user.entity';
+import { UserEntity } from '../../user/domain/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +11,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(email: string, password: string): Promise<{ token: string; user: User }> {
+  async login(email: string, password: string): Promise<{ token: string; user: UserEntity }> {
     const user = await this.userService.getUserByEmail(email);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -26,7 +26,7 @@ export class AuthService {
     return { token, user };
   }
 
-  private generateToken(user: User): string {
+  private generateToken(user: UserEntity): string {
     const payload = {
       sub: user.getId(),
       email: user.getEmail(),

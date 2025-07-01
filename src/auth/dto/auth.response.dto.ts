@@ -1,10 +1,10 @@
-import { User } from '../../user/domain/entities/user.entity';
+import { UserEntity } from '../../user/domain/entities/user.entity';
 import { UserOutput } from '../../user/interfaces/dto/user.output';
 
 import { AuthOutput } from './auth.output';
 
 export class AuthResponseDTO {
-  static fromLogin(token: string, user: User): AuthOutput {
+  static fromLogin(token: string, user: UserEntity): AuthOutput {
     const userOutput: UserOutput = {
       id: user.id,
       email: user.email,
