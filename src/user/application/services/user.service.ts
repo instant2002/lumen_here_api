@@ -4,10 +4,8 @@ import * as bcrypt from 'bcryptjs';
 import { UserEntity } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 
-import { IUserService } from './user.service.interface';
-
 @Injectable()
-export class UserService implements IUserService {
+export class UserService {
   constructor(
     @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
@@ -24,7 +22,7 @@ export class UserService implements IUserService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    const user = UserEntity.create(this.generateId(), email, hashedPassword, name);
+    const user = UserEntity.create({ id: this.generateId(), email, password: hashedPassword, name });
 
     return await this.userRepository.save(user);
   }
@@ -35,16 +33,6 @@ export class UserService implements IUserService {
 
   async getUserByEmail(email: string): Promise<UserEntity | null> {
     return await this.userRepository.findByEmail(email);
-  }
-
-  async updateUserName(id: string, name: string): Promise<UserEntity> {
-    const user = await this.userRepository.findById(id);
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    user.updateName(name);
-    return await this.userRepository.update(user);
   }
 
   async updateUserPassword(id: string, password: string): Promise<UserEntity> {

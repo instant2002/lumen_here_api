@@ -27,12 +27,6 @@ export class UserResolver {
     return UserResponseDTO.fromUser(user);
   }
 
-  @Mutation(() => UserOutput)
-  async updateUserName(@Args('id') id: string, @Args('name') name: string): Promise<UserOutput> {
-    const user = await this.userService.updateUserName(id, name);
-    return UserResponseDTO.fromUser(user);
-  }
-
   @Mutation(() => Boolean)
   async deleteUser(@Args('id') id: string): Promise<boolean> {
     await this.userService.deleteUser(id);

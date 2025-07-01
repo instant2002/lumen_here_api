@@ -17,7 +17,7 @@ export class PrismaUserRepository implements IUserRepository {
       return null;
     }
 
-    return this.mapToUser(userData);
+    return UserEntity.revertToUserEntity(userData);
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
@@ -29,7 +29,7 @@ export class PrismaUserRepository implements IUserRepository {
       return null;
     }
 
-    return this.mapToUser(userData);
+    return UserEntity.revertToUserEntity(userData);
   }
 
   async save(user: UserEntity): Promise<UserEntity> {
@@ -44,7 +44,7 @@ export class PrismaUserRepository implements IUserRepository {
       },
     });
 
-    return this.mapToUser(userData);
+    return UserEntity.revertToUserEntity(userData);
   }
 
   async update(user: UserEntity): Promise<UserEntity> {
@@ -58,23 +58,12 @@ export class PrismaUserRepository implements IUserRepository {
       },
     });
 
-    return this.mapToUser(userData);
+    return UserEntity.revertToUserEntity(userData);
   }
 
   async delete(id: string): Promise<void> {
     await this.prisma.user.delete({
       where: { id },
     });
-  }
-
-  private mapToUser(userData: any): UserEntity {
-    return new UserEntity(
-      userData.id,
-      userData.email,
-      userData.password,
-      userData.name,
-      userData.createdAt,
-      userData.updatedAt,
-    );
   }
 }
