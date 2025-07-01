@@ -13,7 +13,7 @@ import { AuthService } from './services/auth.service';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
+        secret: configService.get<string>('JWT_SECRET') || 'fallback-secret',
         signOptions: { expiresIn: '1d' },
       }),
       inject: [ConfigService],

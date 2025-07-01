@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 
 import { AuthModule } from './auth/auth.module';
+import { PrismaModule } from './shared/infrastructure/prisma/prisma.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -17,6 +18,7 @@ import { UserModule } from './user/user.module';
       playground: true,
       context: ({ req }) => ({ req }),
     }),
+    PrismaModule,
     UserModule,
     AuthModule,
   ],
