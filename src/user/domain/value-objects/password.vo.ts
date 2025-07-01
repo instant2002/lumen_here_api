@@ -4,7 +4,6 @@ export class PasswordValueObject {
   private readonly value: string;
 
   constructor(password: string) {
-    password = this.hashPassword(password);
     this.validate(password);
     this.value = password;
   }
@@ -26,8 +25,8 @@ export class PasswordValueObject {
     }
   }
 
-  private hashPassword(password: string): string {
-    return bcrypt.hashSync(password, 10);
+  hashPassword(): string {
+    return bcrypt.hashSync(this.value, 10);
   }
 
   getValue(): string {

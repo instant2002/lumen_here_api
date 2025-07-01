@@ -53,7 +53,7 @@ export class UserEntity {
     return new UserEntity({
       id,
       email: email.getValue(),
-      password: password.getValue(),
+      password: password.hashPassword(),
       name,
       createdAt: new Date(),
       updatedAt: new Date(),
