@@ -1,37 +1,12 @@
 export class User {
   constructor(
-    private readonly id: string,
-    private email: string,
-    private password: string,
-    private name?: string,
-    private readonly createdAt?: Date,
-    private updatedAt?: Date,
+    public readonly id: string,
+    public email: string,
+    public password: string,
+    public name?: string,
+    public readonly createdAt?: Date,
+    public updatedAt?: Date,
   ) {}
-
-  // Getters
-  getId(): string {
-    return this.id;
-  }
-
-  getEmail(): string {
-    return this.email;
-  }
-
-  getPassword(): string {
-    return this.password;
-  }
-
-  getName(): string | undefined {
-    return this.name;
-  }
-
-  getCreatedAt(): Date | undefined {
-    return this.createdAt;
-  }
-
-  getUpdatedAt(): Date | undefined {
-    return this.updatedAt;
-  }
 
   // Business methods
   updateName(name: string): void {
