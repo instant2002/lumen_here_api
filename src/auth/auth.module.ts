@@ -5,8 +5,8 @@ import { PassportModule } from '@nestjs/passport';
 
 import { UserModule } from '../user/user.module';
 
+import { AuthService } from './application/services/auth.service';
 import { AuthResolver } from './graphql/auth.resolver';
-import { AuthService } from './services/auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
