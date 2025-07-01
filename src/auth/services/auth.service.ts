@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
 
 import { UserService } from '../../user/application/services/user.service';
+import { User } from '../../user/domain/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -28,8 +28,8 @@ export class AuthService {
 
   private generateToken(user: User): string {
     const payload = {
-      sub: user.id,
-      email: user.email,
+      sub: user.getId(),
+      email: user.getEmail(),
     };
 
     return this.jwtService.sign(payload);

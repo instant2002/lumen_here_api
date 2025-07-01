@@ -1,12 +1,37 @@
-import { User } from '@prisma/client';
+export class User {
+  constructor(
+    private readonly id: string,
+    private email: string,
+    private password: string,
+    private name?: string,
+    private readonly createdAt?: Date,
+    private updatedAt?: Date,
+  ) {}
 
-export class UserEntity implements User {
-  id: number;
-  name: string;
-  updatedAt: Date;
-  password: string;
-  email: string;
-  createdAt: Date;
+  // Getters
+  getId(): string {
+    return this.id;
+  }
+
+  getEmail(): string {
+    return this.email;
+  }
+
+  getPassword(): string {
+    return this.password;
+  }
+
+  getName(): string | undefined {
+    return this.name;
+  }
+
+  getCreatedAt(): Date | undefined {
+    return this.createdAt;
+  }
+
+  getUpdatedAt(): Date | undefined {
+    return this.updatedAt;
+  }
 
   // Business methods
   updateName(name: string): void {
@@ -20,13 +45,7 @@ export class UserEntity implements User {
   }
 
   // Factory method
-  create(email: string, password: string, name: string) {
-    this.email = email;
-    this.password = password;
-    this.name = name;
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
-
-    return this;
+  static create(id: string, email: string, password: string, name?: string): User {
+    return new User(id, email, password, name, new Date(), new Date());
   }
 }

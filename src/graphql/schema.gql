@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type UserOutput {
-  id: Float!
+  id: String!
   email: String!
   name: String
   createdAt: DateTime!
@@ -21,11 +21,14 @@ type AuthOutput {
 }
 
 type Query {
-  getUserById: UserOutput
+  getUserById(id: String!): UserOutput
+  getUserByEmail(email: String!): UserOutput
 }
 
 type Mutation {
   createUser(data: CreateUserInput!): UserOutput!
+  updateUserName(id: String!, name: String!): UserOutput!
+  deleteUser(id: String!): Boolean!
   login(input: LoginInput!): AuthOutput!
 }
 

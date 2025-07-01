@@ -1,16 +1,15 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { User } from '@prisma/client';
 
 @ObjectType()
-export class UserOutput implements Pick<User, 'id' | 'email' | 'name' | 'createdAt' | 'updatedAt'> {
+export class UserOutput {
   @Field()
-  id: number;
+  id: string;
 
   @Field()
   email: string;
 
   @Field({ nullable: true })
-  name: string;
+  name?: string;
 
   @Field()
   createdAt: Date;

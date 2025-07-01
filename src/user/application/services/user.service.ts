@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 
-import { UserEntity } from '../../domain/entities/user.entity';
+import { User } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 
 import { IUserService } from './user.service.interface';
@@ -14,24 +13,65 @@ export class UserService implements IUserService {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async createUser(email: string, password: string, name: string): Promise<User> {
+  async createUser(email: string, password: string, name?: string): Promise<User> {
+    // Check if user already exists
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
       throw new Error('User with this email already exists');
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new UserEntity().create(email, hashedPassword, name);
+    // Create user
+    const user = User.create(this.generateId(), email, hashedPassword, name);
 
     return await this.userRepository.save(user);
+  }
+
+  async getUserById(id: string): Promise<User | null> {
+    return await this.userRepository.findById(id);
   }
 
   async getUserByEmail(email: string): Promise<User | null> {
     return await this.userRepository.findByEmail(email);
   }
 
+  async updateUserName(id: string, name: string): Promise<User> {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    user.updateName(name);
+    return await this.userRepository.update(user);
+  }
+
+  async updateUserPassword(id: string, password: string): Promise<User> {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.updatePassword(hashedPassword);
+    return await this.userRepository.update(user);
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    await this.userRepository.delete(id);
+  }
+
   async validatePassword(user: User, password: string): Promise<boolean> {
-    return await bcrypt.compare(password, user.password);
+    return await bcrypt.compare(password, user.getPassword());
+  }
+
+  private generateId(): string {
+    return Math.random().toString(36).substr(2, 9);
   }
 }
