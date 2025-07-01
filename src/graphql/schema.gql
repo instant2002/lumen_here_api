@@ -22,7 +22,6 @@ type AuthOutput {
 
 type Query {
   getUserById(id: String!): UserOutput
-  getUserByEmail(email: String!): UserOutput
 }
 
 type Mutation {

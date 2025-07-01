@@ -15,12 +15,6 @@ export class UserResolver {
     return UserResponseDTO.fromUserOrNull(user);
   }
 
-  @Query(() => UserOutput, { nullable: true })
-  async getUserByEmail(@Args('email') email: string): Promise<UserOutput | null> {
-    const user = await this.userService.getUserByEmail(email);
-    return UserResponseDTO.fromUserOrNull(user);
-  }
-
   @Mutation(() => UserOutput)
   async createUser(@Args('data') data: CreateUserInput): Promise<UserOutput> {
     const user = await this.userService.createUser(data.email, data.password, data.name);
