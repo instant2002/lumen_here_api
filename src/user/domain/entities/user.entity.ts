@@ -1,14 +1,38 @@
 import { User } from '@prisma/client';
 
+import { EmailValueObject } from '../value-objects/email.vo';
+import { PasswordValueObject } from '../value-objects/password.vo';
+
 export class UserEntity {
-  constructor(
-    public readonly id: string,
-    public email: string,
-    public password: string,
-    public name?: string,
-    public readonly createdAt?: Date,
-    public updatedAt?: Date,
-  ) {}
+  constructor({
+    id,
+    email,
+    password,
+    name,
+    createdAt,
+    updatedAt,
+  }: {
+    id: string;
+    email: string;
+    password: string;
+    name: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+  }) {
+    this.id = id;
+    this.email = email;
+    this.password = password;
+    this.name = name;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  id: string;
+  email: string;
+  password: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
 
   updatePassword(password: string): void {
     this.password = password;
@@ -22,21 +46,28 @@ export class UserEntity {
     name,
   }: {
     id: string;
-    email: string;
-    password: string;
-    name?: string;
+    email: EmailValueObject;
+    password: PasswordValueObject;
+    name: string;
   }): UserEntity {
-    return new UserEntity(id, email, password, name, new Date(), new Date());
+    return new UserEntity({
+      id,
+      email: email.getValue(),
+      password: password.getValue(),
+      name,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
   }
 
   static revertToUserEntity(prismaUser: User): UserEntity {
-    return new UserEntity(
-      prismaUser.id,
-      prismaUser.email,
-      prismaUser.password,
-      prismaUser.name,
-      prismaUser.createdAt,
-      prismaUser.updatedAt,
-    );
+    return new UserEntity({
+      id: prismaUser.id,
+      email: prismaUser.email,
+      password: prismaUser.password,
+      name: prismaUser.name,
+      createdAt: prismaUser.createdAt,
+      updatedAt: prismaUser.updatedAt,
+    });
   }
 }

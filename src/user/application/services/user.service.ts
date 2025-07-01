@@ -3,6 +3,8 @@ import * as bcrypt from 'bcryptjs';
 
 import { UserEntity } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
+import { EmailValueObject } from '../../domain/value-objects/email.vo';
+import { PasswordValueObject } from '../../domain/value-objects/password.vo';
 
 @Injectable()
 export class UserService {
@@ -11,20 +13,18 @@ export class UserService {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async createUser(email: string, password: string, name?: string): Promise<UserEntity> {
-    // Check if user already exists
+  async createUser(email: string, password: string, name: string): Promise<UserEntity> {
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
       throw new Error('User with this email already exists');
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const passwordVO = new PasswordValueObject(password);
+    const emailVO = new EmailValueObject(email);
 
-    // Create user
-    const user = UserEntity.create({ id: this.generateId(), email, password: hashedPassword, name });
+    const user = UserEntity.create({ id: this.generateId(), email: emailVO, password: passwordVO, name });
 
-    return await this.userRepository.save(user);
+    return this.userRepository.save(user);
   }
 
   async getUserById(id: string): Promise<UserEntity | null> {

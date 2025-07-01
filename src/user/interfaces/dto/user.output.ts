@@ -9,7 +9,7 @@ export class UserOutput {
   email: string;
 
   @Field({ nullable: true })
-  name?: string;
+  name: string;
 
   @Field()
   createdAt: Date;
