@@ -17,11 +17,7 @@ export class PasswordValueObject {
 
   private validate(password: string): void {
     if (password.length < 8) {
-      throw new Error('Password must be at least 8 characters long');
-    }
-
-    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
-      throw new Error('Password must contain at least one lowercase letter, one uppercase letter, and one number');
+      throw new Error('8자리 이상 입력해 주세요');
     }
   }
 
@@ -33,7 +29,7 @@ export class PasswordValueObject {
     return this.value;
   }
 
-  equals(other: PasswordValueObject): boolean {
-    return this.value === other.value;
+  equals(hashedPassword: string): boolean {
+    return bcrypt.compareSync(this.value, hashedPassword);
   }
 }
