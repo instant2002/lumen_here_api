@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
 
 import { UserEntity } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
@@ -47,7 +46,8 @@ export class UserService {
   }
 
   async validatePassword(user: UserEntity, password: string): Promise<boolean> {
-    return await bcrypt.compare(password, user.password);
+    const passwordVO = PasswordValueObject.fromHashed(user.password, user.salt);
+    return passwordVO.verifyPassword(password);
   }
 
   private generateId(): string {

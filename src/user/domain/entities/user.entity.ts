@@ -8,6 +8,7 @@ export class UserEntity {
     id,
     email,
     password,
+    salt,
     name,
     createdAt,
     updatedAt,
@@ -15,6 +16,7 @@ export class UserEntity {
     id: string;
     email: string;
     password: string;
+    salt: string;
     name: string;
     createdAt?: Date;
     updatedAt?: Date;
@@ -22,6 +24,7 @@ export class UserEntity {
     this.id = id;
     this.email = email;
     this.password = password;
+    this.salt = salt;
     this.name = name;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
@@ -30,12 +33,14 @@ export class UserEntity {
   id: string;
   email: string;
   password: string;
+  salt: string;
   name: string;
   createdAt: Date;
   updatedAt: Date;
 
   updatePassword(password: PasswordValueObject): void {
     this.password = password.getValue();
+    this.salt = password.getSalt();
     this.updatedAt = new Date();
   }
 
@@ -54,6 +59,7 @@ export class UserEntity {
       id,
       email: email.getValue(),
       password: password.hashPassword(),
+      salt: password.getSalt(),
       name,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -65,6 +71,7 @@ export class UserEntity {
       id: prismaUser.id,
       email: prismaUser.email,
       password: prismaUser.password,
+      salt: prismaUser.salt,
       name: prismaUser.name,
       createdAt: prismaUser.createdAt,
       updatedAt: prismaUser.updatedAt,
