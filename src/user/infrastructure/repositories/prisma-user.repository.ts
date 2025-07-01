@@ -35,12 +35,12 @@ export class PrismaUserRepository implements IUserRepository {
   async save(user: UserEntity): Promise<UserEntity> {
     const userData = await this.prisma.user.create({
       data: {
-        id: user.getId(),
-        email: user.getEmail(),
-        password: user.getPassword(),
-        name: user.getName(),
-        createdAt: user.getCreatedAt(),
-        updatedAt: user.getUpdatedAt(),
+        id: user.id,
+        email: user.email,
+        password: user.password,
+        name: user.name,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       },
     });
 
@@ -49,12 +49,12 @@ export class PrismaUserRepository implements IUserRepository {
 
   async update(user: UserEntity): Promise<UserEntity> {
     const userData = await this.prisma.user.update({
-      where: { id: user.getId() },
+      where: { id: user.id },
       data: {
-        email: user.getEmail(),
-        password: user.getPassword(),
-        name: user.getName(),
-        updatedAt: user.getUpdatedAt(),
+        email: user.email,
+        password: user.password,
+        name: user.name,
+        updatedAt: user.updatedAt,
       },
     });
 

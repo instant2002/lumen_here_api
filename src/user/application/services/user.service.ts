@@ -68,7 +68,7 @@ export class UserService implements IUserService {
   }
 
   async validatePassword(user: UserEntity, password: string): Promise<boolean> {
-    return await bcrypt.compare(password, user.getPassword());
+    return await bcrypt.compare(password, user.password);
   }
 
   private generateId(): string {

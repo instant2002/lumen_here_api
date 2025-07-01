@@ -28,8 +28,8 @@ export class AuthService {
 
   private generateToken(user: UserEntity): string {
     const payload = {
-      sub: user.getId(),
-      email: user.getEmail(),
+      sub: user.id,
+      email: user.email,
     };
 
     return this.jwtService.sign(payload);
