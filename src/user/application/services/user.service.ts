@@ -14,7 +14,7 @@ export class UserService implements IUserService {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async createUser(email: string, password: string, name?: string): Promise<User> {
+  async createUser(email: string, password: string, name: string): Promise<User> {
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
       throw new Error('User with this email already exists');

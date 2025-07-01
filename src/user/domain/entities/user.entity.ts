@@ -20,7 +20,7 @@ export class UserEntity implements User {
   }
 
   // Factory method
-  create(email: string, password: string, name?: string) {
+  create(email: string, password: string, name: string) {
     this.email = email;
     this.password = password;
     this.name = name;
