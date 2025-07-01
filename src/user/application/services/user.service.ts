@@ -41,8 +41,8 @@ export class UserService {
       throw new Error('User not found');
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    user.updatePassword(hashedPassword);
+    const updatePassword = new PasswordValueObject(password);
+    user.updatePassword(updatePassword);
     return await this.userRepository.update(user);
   }
 

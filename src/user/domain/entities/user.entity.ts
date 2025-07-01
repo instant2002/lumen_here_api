@@ -34,8 +34,8 @@ export class UserEntity {
   createdAt: Date;
   updatedAt: Date;
 
-  updatePassword(password: string): void {
-    this.password = password;
+  updatePassword(password: PasswordValueObject): void {
+    this.password = password.getValue();
     this.updatedAt = new Date();
   }
 
