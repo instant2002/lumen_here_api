@@ -5,7 +5,7 @@ import { UserEntity } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 
 @Injectable()
-export class PrismaUserRepository implements IUserRepository {
+export class UserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<UserEntity | null> {
