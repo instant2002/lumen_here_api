@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { IdGeneratorUtil } from '../../../shared/infrastructure/utils/id-generator.util';
 import { UserEntity } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
+import { UserDomainService } from '../../domain/services/user-domain.service';
 import { EmailValueObject } from '../../domain/value-objects/email.vo';
 import { PasswordValueObject } from '../../domain/value-objects/password.vo';
 
@@ -10,6 +12,7 @@ export class UserService {
   constructor(
     @Inject('IUserRepository')
     private readonly userRepository: IUserRepository,
+    private readonly userDomainService: UserDomainService,
   ) {}
 
   async createUser(email: string, password: string, name: string): Promise<UserEntity> {
@@ -21,7 +24,7 @@ export class UserService {
     const passwordVO = new PasswordValueObject(password);
     const emailVO = new EmailValueObject(email);
 
-    const user = UserEntity.create({ id: this.generateId(), email: emailVO, password: passwordVO, name });
+    const user = UserEntity.create({ id: IdGeneratorUtil.getRandomUUID(), email: emailVO, password: passwordVO, name });
 
     return this.userRepository.save(user);
   }
@@ -43,14 +46,5 @@ export class UserService {
     const updatePassword = new PasswordValueObject(password);
     user.updatePassword(updatePassword);
     return await this.userRepository.update(user);
-  }
-
-  async validatePassword(user: UserEntity, password: string): Promise<boolean> {
-    const passwordVO = new PasswordValueObject(password);
-    return passwordVO.equals(user.password);
-  }
-
-  private generateId(): string {
-    return Math.random().toString(36).substr(2, 9);
   }
 }

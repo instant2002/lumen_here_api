@@ -22,6 +22,7 @@ type AuthOutput {
 
 type Query {
   getUserById(id: String!): UserOutput
+  getCurrentUser: UserOutput
 }
 
 type Mutation {
