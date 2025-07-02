@@ -17,5 +17,6 @@ async function bootstrap() {
 
   await app.listen(3000);
   console.log('🚀 Application is running on: http://localhost:3000/graphql');
+  console.log('🚀 playground url is: https://studio.apollographql.com/sandbox/explorer');
 }
 bootstrap();
