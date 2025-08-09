@@ -1,5 +1,6 @@
 import { UserEntity } from '../entities/user.entity';
 
 export interface IUserRepository {
-  findById(id: number): Promise<UserEntity>;
+  create(user: UserEntity): Promise<UserEntity>;
+  findUnique(id: number): Promise<UserEntity>;
 }
