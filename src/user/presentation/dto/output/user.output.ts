@@ -1,14 +1,25 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { UserEntity } from '../../../domain/entities/user.entity';
 
 @ObjectType()
 export class UserOutput {
-  constructor(data: UserEntity) {
-    this.id = data.id;
-    this.email = data.email;
-    this.name = data.name;
-    this.createdAt = data.createdAt;
-    this.updatedAt = data.updatedAt;
+  constructor({
+    id,
+    email,
+    name,
+    createdAt,
+    updatedAt,
+  }: {
+    id: number;
+    email: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }) {
+    this.id = id;
+    this.email = email;
+    this.name = name;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 
   @Field()
