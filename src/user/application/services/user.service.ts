@@ -3,17 +3,20 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UserEntity } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/i-repositories/user.repository.interface';
 import { IPasswordEncryptionService } from '../../domain/services/password-encryption.service';
-import { IUserDomainService } from '../../domain/services/user-domain.service';
+import { UserDomainService } from '../../domain/services/user-domain.service';
 import { PasswordVO } from '../../domain/value-objects/password.vo';
 import { CreateUserDTO } from '../dtos/create-user.dto';
 
 @Injectable()
 export class UserService {
+  private userDomainService: UserDomainService;
+
   constructor(
     @Inject('IUserRepository') private readonly userRepository: IUserRepository,
     @Inject('IPasswordEncryptionService') private readonly passwordEncryptionService: IPasswordEncryptionService,
-    @Inject('IUserDomainService') private readonly userDomainService: IUserDomainService,
-  ) {}
+  ) {
+    this.userDomainService = new UserDomainService(this.userRepository);
+  }
 
   async create(data: CreateUserDTO): Promise<UserEntity> {
     await this.userDomainService.checkDuplicatedEmail(data.email);

@@ -1,10 +1,6 @@
 import { IUserRepository } from '../i-repositories/user.repository.interface';
 
-export interface IUserDomainService {
-  checkDuplicatedEmail(email: string);
-}
-
-export class UserDomainService implements IUserDomainService {
+export class UserDomainService {
   constructor(private readonly userRepository: IUserRepository) {}
 
   async checkDuplicatedEmail(email: string) {
