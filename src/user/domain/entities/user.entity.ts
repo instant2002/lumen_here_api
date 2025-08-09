@@ -1,9 +1,29 @@
-import { User } from '@prisma/client';
-import { CreateUserInput } from '../../presentation/dto/input/create-user.input';
-import { PasswordValueObject } from '../value-objects/password.vo';
-
 export class UserEntity {
-  constructor() {}
+  constructor({
+    id,
+    email,
+    password,
+    salt,
+    name,
+    createdAt,
+    updatedAt,
+  }: {
+    id?: number;
+    email: string;
+    password: string;
+    salt: string;
+    name: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+  }) {
+    this.id = id;
+    this.email = email;
+    this.password = password;
+    this.salt = salt;
+    this.name = name;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
 
   id: number;
   email: string;
@@ -13,25 +33,33 @@ export class UserEntity {
   createdAt: Date;
   updatedAt: Date;
 
-  create(data: CreateUserInput): UserEntity {
-    const password = new PasswordValueObject(data.password);
-
-    this.email = data.email;
-    this.password = password.getValue();
-    this.salt = password.getSalt();
-    this.name = data.name;
-    return this;
+  static create({
+    password,
+    email,
+    name,
+    salt,
+  }: {
+    password: string;
+    email: string;
+    name: string;
+    salt: string;
+  }): UserEntity {
+    UserEntity.validateName(name);
+    return new UserEntity({
+      email,
+      password,
+      salt,
+      name,
+    });
   }
 
-  prismaToEntity(prismaUser: User): UserEntity {
-    this.id = prismaUser.id;
-    this.email = prismaUser.email;
-    this.password = prismaUser.password;
-    this.salt = prismaUser.salt;
-    this.name = prismaUser.name;
-    this.createdAt = prismaUser.createdAt;
-    this.updatedAt = prismaUser.updatedAt;
+  private static validateName(name: string) {
+    if (name.trim().length < 2) {
+      throw new Error('이름은 2자리 이상이어야 합니다');
+    }
 
-    return this;
+    if (name.trim().length > 10) {
+      throw new Error('이름은 10자리 이하여야 합니다');
+    }
   }
 }

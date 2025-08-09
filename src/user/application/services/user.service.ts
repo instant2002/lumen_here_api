@@ -1,23 +1,37 @@
 import { Inject, Injectable } from '@nestjs/common';
+
 import { UserEntity } from '../../domain/entities/user.entity';
 import { IUserRepository } from '../../domain/i-repositories/user.repository.interface';
-import { CreateUserInput } from '../../presentation/dto/input/create-user.input';
+import { IPasswordEncryptionService } from '../../domain/services/password-encryption.service';
+import { IUserDomainService } from '../../domain/services/user-domain.service';
+import { PasswordVO } from '../../domain/value-objects/password.vo';
+import { CreateUserDTO } from '../dtos/create-user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject('IUserRepository') private readonly userRepository: IUserRepository) {}
+  constructor(
+    @Inject('IUserRepository') private readonly userRepository: IUserRepository,
+    @Inject('IPasswordEncryptionService') private readonly passwordEncryptionService: IPasswordEncryptionService,
+    @Inject('IUserDomainService') private readonly userDomainService: IUserDomainService,
+  ) {}
 
-  async create(data: CreateUserInput): Promise<UserEntity> {
-    const existingUser = await this.userRepository.findUniqueByEmail(data.email);
-    if (existingUser) {
-      throw new Error('이미 존재하는 이메일입니다.');
-    }
+  async create(data: CreateUserDTO): Promise<UserEntity> {
+    await this.userDomainService.checkDuplicatedEmail(data.email);
 
-    const user = new UserEntity().create(data);
+    const passwordVO = new PasswordVO(data.password);
+    const { hashedPassword, salt } = this.passwordEncryptionService.hashPassword(passwordVO);
+
+    const user = UserEntity.create({
+      password: hashedPassword,
+      email: data.email,
+      name: data.name,
+      salt,
+    });
+
     return this.userRepository.create(user);
   }
 
-  async findUnique(id: number): Promise<UserEntity> {
+  async findUnique(id: number): Promise<UserEntity | null> {
     return this.userRepository.findUniqueById(id);
   }
 }
