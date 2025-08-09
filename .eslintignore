@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Generated files
+*.d.ts
+
+# Logs
+*.log
+
+# Coverage directory
+coverage/
+
+# Prisma
+prisma/migrations/
+
+# GraphQL schema (if auto-generated)
+src/graphql/schema.gql
+
+# Environment files
+.env*
+
+# IDE files
+.vscode/
+.idea/ 
