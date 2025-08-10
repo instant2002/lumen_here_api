@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-
-import { UserService } from './application/services/user.service';
-import { UserRepository } from './infrastructure/repositories/user.repository';
-import { CryptoPasswordEncryptionService } from './infrastructure/utils/crypto.util';
-import { UserResolver } from './presentation/resolvers/user.resolver';
+import { UserService } from '@user/application/services/user.service';
+import { UserRepository } from '@user/infrastructure/repositories/user.repository';
+import { CryptoPasswordEncryptionService } from '@user/infrastructure/utils/crypto.util';
+import { UserResolver } from '@user/presentation/resolvers/user.resolver';
 
 const resolvers = [UserResolver];
 const services = [

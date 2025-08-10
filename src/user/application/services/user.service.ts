@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { UserEntity } from '../../domain/entities/user.entity';
-import { IUserRepository } from '../../domain/i-repositories/user.repository.interface';
-import { IPasswordEncryptionService } from '../../domain/services/password-encryption.service';
-import { UserDomainService } from '../../domain/services/user-domain.service';
-import { PasswordVO } from '../../domain/value-objects/password.vo';
+import { UserEntity } from '@user/domain/entities/user.entity';
+import { IUserRepository } from '@user/domain/i-repositories/user.repository.interface';
+import { IPasswordEncryptionService } from '@user/domain/services/password-encryption.service';
+import { UserDomainService } from '@user/domain/services/user-domain.service';
+import { PasswordVO } from '@user/domain/value-objects/password.vo';
 import { CreateUserDTO } from '../dtos/create-user.dto';
 
 @Injectable()

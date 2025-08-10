@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { IPasswordEncryptionService } from '@user/domain/services/password-encryption.service';
+import { PasswordVO } from '@user/domain/value-objects/password.vo';
 import * as crypto from 'crypto';
-import { IPasswordEncryptionService } from '../../domain/services/password-encryption.service';
-import { PasswordVO } from '../../domain/value-objects/password.vo';
 
 @Injectable()
 export class CryptoPasswordEncryptionService implements IPasswordEncryptionService {

@@ -1,3 +1,5 @@
+import { CustomBadRequestException } from '@common/exceptions';
+
 export class UserEntity {
   constructor({
     id,
@@ -55,11 +57,11 @@ export class UserEntity {
 
   private static validateName(name: string) {
     if (name.trim().length < 2) {
-      throw new Error('이름은 2자리 이상이어야 합니다');
+      throw new CustomBadRequestException('이름은 2자리 이상이어야 합니다');
     }
 
     if (name.trim().length > 10) {
-      throw new Error('이름은 10자리 이하여야 합니다');
+      throw new CustomBadRequestException('이름은 10자리 이하여야 합니다');
     }
   }
 }
