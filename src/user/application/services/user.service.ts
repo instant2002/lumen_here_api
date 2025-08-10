@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { CreateUserDTO } from '@user/application/dtos/create-user.dto';
 import { UserEntity } from '@user/domain/entities/user.entity';
 import { IUserRepository } from '@user/domain/i-repositories/user.repository.interface';
 import { IPasswordEncryptionService } from '@user/domain/services/password-encryption.service';
 import { UserDomainService } from '@user/domain/services/user-domain.service';
 import { PasswordVO } from '@user/domain/value-objects/password.vo';
-import { CreateUserDTO } from '../dtos/create-user.dto';
+import { CustomNotFoundException } from '../../../common/exceptions';
 
 @Injectable()
 export class UserService {
@@ -35,6 +36,9 @@ export class UserService {
   }
 
   async findUnique(id: number): Promise<UserEntity | null> {
-    return this.userRepository.findUniqueById(id);
+    const user = await this.userRepository.findUniqueById(id);
+    if (!user) throw new CustomNotFoundException('존재하지 않는 유저입니다');
+
+    return user;
   }
 }
