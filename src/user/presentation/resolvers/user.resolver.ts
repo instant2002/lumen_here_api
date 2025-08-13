@@ -9,7 +9,7 @@ export class UserResolver {
 
   @Query(() => UserOutput)
   async getUser(@Args('id') id: number): Promise<UserOutput> {
-    const user = await this.userService.findUniqeu(id);
+    const user = await this.userService.findUniqeue(id);
     return new UserOutput(user);
   }
 
