@@ -107,7 +107,7 @@ describe('UserService', () => {
 
   describe('findUnique', () => {
     it('should return user when user exists', async () => {
-      const result = await service.findUniqeue(1);
+      const result = await service.findUniqeuee(1);
 
       expect(result).toBeDefined();
       expect(result?.id).toBe(1);
@@ -115,8 +115,8 @@ describe('UserService', () => {
     });
 
     it('should throw CustomNotFoundException when user does not exist', async () => {
-      await expect(service.findUniqeue(999)).rejects.toThrow(CustomNotFoundException);
-      await expect(service.findUniqeue(999)).rejects.toThrow('존재하지 않는 유저입니다');
+      await expect(service.findUniqeuee(999)).rejects.toThrow(CustomNotFoundException);
+      await expect(service.findUniqeuee(999)).rejects.toThrow('존재하지 않는 유저입니다');
     });
   });
 });

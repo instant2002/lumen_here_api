@@ -35,7 +35,7 @@ export class UserService {
     return this.userRepository.create(user);
   }
 
-  async findUniqeue(id: number): Promise<UserEntity | null> {
+  async findUniqeuee(id: number): Promise<UserEntity | null> {
     const user = await this.userRepository.findUniqueById(id);
     if (!user) throw new CustomNotFoundException('존재하지 않는 유저입니다');
 
