@@ -6,8 +6,6 @@ export class UserDomainService {
 
   async checkDuplicatedEmail(email: string) {
     const existingUser = await this.userRepository.findUniqueByEmail(email);
-    if (existingUser) {
-      throw new CustomBadRequestException('이미 존재하는 이메일입니다');
-    }
+    if (existingUser) throw new CustomBadRequestException('이미 사용중인 이메일입니다');
   }
 }
