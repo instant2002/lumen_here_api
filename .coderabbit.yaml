@@ -1,0 +1,112 @@
+# yaml-language-server: $schema=https://storage.googleapis.com/coderabbit_public_assets/schema.v2.json
+language: ko-KR
+early_access: false # 실험기능 미리 도입
+enable_free_tier: true # 무료 티어 사용 가능
+
+reviews:
+  # 전체 톤/강도
+  profile: chill # 코드 리뷰 강도
+  request_changes_workflow: false # 리뷰어가 변경 요청 시 자동으로 워크플로우 생성
+  high_level_summary: true # 리뷰어가 코드 변경 요청 시 자동으로 코드 변경 요청 내용 요약 생성
+  high_level_summary_placeholder: '@coderabbitai summary' # 요약 생성 시 자동으로 추가할 플레이스홀더
+  high_level_summary_in_walkthrough: false # 요약 생성 시 자동으로 워크플로우 내용에 추가
+  auto_title_placeholder: '@coderabbitai' # 리뷰 제목 자동 생성 시 자동으로 추가할 플레이스홀더
+  auto_title_instructions: '' # 리뷰 제목 자동 생성 시 자동으로 추가할 설명
+  review_status: true # 리뷰 상태 자동 업데이트
+  commit_status: true # 커밋 상태 자동 업데이트
+  fail_commit_status: false # 커밋 상태 실패 시 자동으로 커밋 상태 실패 업데이트
+  collapse_walkthrough: false # 워크플로우 내용 자동 접기
+  changed_files_summary: true # 변경된 파일 요약 생성
+  sequence_diagrams: true # 시퀀스 다이어그램 생성
+  assess_linked_issues: true # 연결된 이슈 평가
+  related_issues: true # 관련 이슈 평가
+  related_prs: true # 관련 PR 평가
+  suggested_labels: true # 제안된 라벨 적용
+  auto_apply_labels: false # 자동 라벨 적용
+  suggested_reviewers: true # 제안된 리뷰어 적용
+  auto_assign_reviewers: false # 자동 리뷰어 할당
+  poem: false # 포임 사용 여부
+
+  # 경로 필터링 (DDD 레이어 기준)
+  path_filters:
+    - 'src/**'
+    - 'prisma/**'
+    - 'migrations/**'
+    - '.github/**'
+    - '!dist/**'
+    - '!coverage/**'
+    - '!node_modules/**'
+    - '!**/*.lock'
+    - '!**/*.snap'
+    - '!**/*.md'
+    - '!scripts/**'
+
+  # 경로별 세부 지침
+  path_instructions:
+    - path: 'src/domain/**'
+      instructions: '엔티티/값객체는 불변성을 기본으로 하고, 생성 규칙을 팩토리 또는 정적 생성자로 강제하라. 도메인 서비스는 순수 함수/비즈니스 규칙만 포함. I/O 없음. 도메인 이벤트 사용 시 명명 규칙(과거 시제)과 페이로드 최소화를 검토.'
+    - path: 'src/application/**'
+      instructions: '유스케이스는 단일 책임. 트랜잭션 시작/커밋 지점은 여기서 관리. DTO ↔ 도메인 모델 매핑은 별도 매퍼로 분리하고, 예외를 애플리케이션 계층 예외로 변환. idempotency가 필요한 명령은 멱등 키 전략을 문서화.'
+    - path: 'src/infrastructure/**'
+      instructions: 'Prisma 리포지토리는 도메인 모델로의 매핑을 제공하고 Prisma 타입 누수를 막아라. 캐시/메시징/외부 API 클라이언트는 인터페이스로 추상화하고 실제 구현을 이 계층에 둔다.'
+    - path: 'src/(interfaces|presentation|http|controllers)/**'
+      instructions: 'Controller는 인증/인가(Guard), 입력 검증(Pipe), 응답 직렬화(Interceptor)를 구성하고 유스케이스 호출만 수행. 에러 매핑: 도메인/애플리케이션 예외를 적절한 HTTP 상태로 변환(409, 422, 404 등).'
+    - path: 'prisma/schema.prisma'
+      instructions: 'MySQL 타입/길이/인덱스 정의를 검토하고, @@id/@@unique/@@index가 쿼리 패턴과 일치하는지 확인. 외래키 onDelete/onUpdate 전략과 relationMode를 명시. Decimal/DateTime 정밀도와 타임존 보관 방식을 명확히.'
+    - path: 'prisma/migrations/**'
+      instructions: 'Zero-downtime 전략: 컬럼 추가 → 백필 → not null/unique 설정 순으로 진행. 대규모 데이터 변경은 배치 작업으로. 위험 작업(rename/drop/alter type)은 교체 마이그레이션(신규 생성 후 스왑)으로 제안.'
+    - path: '**/*.(spec|test).ts'
+      instructions: '단위/통합/e2e 구분을 명확히 하고, TestingModule 구성과 시드/정리 전략(afterAll) 누락을 지적하라.'
+
+  abort_on_close: true
+  disable_cache: false
+
+  auto_review:
+    enabled: true # 자동 리뷰 사용 여부
+    auto_incremental_review: true # 자동 리뷰 증분 사용 여부
+    ignore_title_keywords: [] # 자동 리뷰 제목 키워드 무시
+    labels: [] # 자동 리뷰 라벨 적용
+    drafts: true # 자동 리뷰 초안 사용 여부
+    base_branches: [] # 자동 리뷰 브랜치 목록
+
+  finishing_touches:
+    docstrings:
+      enabled: false # 자동 리뷰 문서 생성 사용 여부
+    unit_tests:
+      enabled: false # 자동 리뷰 단위 테스트 생성 사용 여부
+
+  tools:
+    # 필수 유틸들
+    eslint:
+      enabled: true # ESLint 사용 여부
+    semgrep:
+      enabled: true # Semgrep 사용 여부
+      config_file: ''
+    prismaLint:
+      enabled: true # PrismaLint 사용 여부
+    yamllint:
+      enabled: true # yamllint 사용 여부
+    dotenvLint:
+      enabled: true # dotenvLint 사용 여부
+    gitleaks:
+      enabled: true # gitleaks 사용 여부
+    markdownlint:
+      enabled: true # markdownlint 사용 여부
+
+chat:
+  auto_reply: true # 자동 리플라이 사용 여부
+
+knowledge_base:
+  opt_out: false # 지식 베이스 사용 여부
+  web_search:
+    enabled: false # 웹 검색 사용 여부
+  code_guidelines:
+    enabled: true # 코드 가이드라인 사용 여부
+    filePatterns: [] # 코드 가이드라인 파일 패턴
+
+code_generation: # 코드 생성 설정
+  docstrings:
+    language: ko-KR
+    path_instructions: [] # 코드 생성 경로 지침
+  unit_tests:
+    path_instructions: [] # 단위 테스트 경로 지침
