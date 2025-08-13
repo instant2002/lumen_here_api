@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from '@user/application/services/user.service';
 import { CreateUserInput } from '@user/presentation/dto/input/create-user.input';
 import { UserOutput } from '@user/presentation/dto/output/user.output';
@@ -8,8 +8,8 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => UserOutput)
-  async getUsre(@Args('id') id: number): Promise<UserOutput> {
-    const user = await this.userService.findUniqeuee(id);
+  async getUser(@Args('id', { type: () => Int }) id: number): Promise<UserOutput> {
+    const user = await this.userService.findUnique(id);
     return new UserOutput(user);
   }
 
