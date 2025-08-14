@@ -62,7 +62,7 @@ reviews:
   disable_cache: false
 
   auto_review:
-    enabled: true # 자동 리뷰 사용 여부
+    enabled: false # 자동 리뷰 사용 여부
     auto_incremental_review: true # 자동 리뷰 증분 사용 여부
     ignore_title_keywords: [] # 자동 리뷰 제목 키워드 무시
     labels: [] # 자동 리뷰 라벨 적용
