@@ -8,7 +8,7 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => UserOutput)
-  async getUserd(@Args('id', { type: () => Int }) id: number): Promise<UserOutput> {
+  async getUserr(@Args('id', { type: () => Int }) id: number): Promise<UserOutput> {
     const user = await this.userService.findUnique(id);
     return new UserOutput(user);
   }
