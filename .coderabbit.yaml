@@ -33,7 +33,6 @@ reviews:
     - 'prisma/**'
     - 'migrations/**'
     - '.github/**'
-    - '!src/user/**'
     - '!dist/**'
     - '!coverage/**'
     - '!node_modules/**'
