@@ -41,7 +41,15 @@ class MockPasswordEncryptionService implements IPasswordEncryptionService {
     };
   }
 
-  verifyPassword(_password: PasswordVO, _hashedPassword: string, _salt: string): boolean {
+  verifyPassword({
+    passwordVO: _passwordVO,
+    hashedPassword: _hashedPassword,
+    salt: _salt,
+  }: {
+    passwordVO: PasswordVO;
+    hashedPassword: string;
+    salt: string;
+  }): boolean {
     return true;
   }
 }

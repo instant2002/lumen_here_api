@@ -21,6 +21,24 @@ export class CryptoPasswordEncryptionService implements IPasswordEncryptionServi
     };
   }
 
+  verifyPassword({
+    passwordVO,
+    hashedPassword,
+    salt,
+  }: {
+    passwordVO: PasswordVO;
+    hashedPassword: string;
+    salt: string;
+  }): boolean {
+    const hashedPasswordToVerify = this.generateHashedPassword(passwordVO, salt);
+
+    return hashedPasswordToVerify === hashedPassword;
+  }
+
+  private generateHashedPassword(passwordVO: PasswordVO, salt: string): string {
+    return crypto.pbkdf2Sync(passwordVO.getValue(), salt, this.saltRounds, this.keyLength, this.digest).toString('hex');
+  }
+
   private generateSalt(): string {
     return crypto.randomBytes(32).toString('hex');
   }

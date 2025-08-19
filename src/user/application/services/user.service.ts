@@ -41,4 +41,11 @@ export class UserService {
 
     return user;
   }
+
+  async findUniqueByEmail(email: string): Promise<UserEntity> {
+    const user = await this.userRepository.findUniqueByEmail(email);
+    if (!user) throw new CustomNotFoundException('존재하지 않는 유저입니다');
+
+    return user;
+  }
 }
