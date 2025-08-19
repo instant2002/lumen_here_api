@@ -4,8 +4,9 @@ import { CustomBadRequestException, CustomNotFoundException } from '@/common/exc
 import { UserService } from '@/user/application/services/user.service';
 import { IPasswordEncryptionService } from '@/user/domain/services/password-encryption.service';
 import { PasswordVO } from '@/user/domain/value-objects/password.vo';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
+@Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
@@ -24,12 +25,12 @@ export class AuthService {
       });
 
       if (!isPasswordValid) {
-        throw new CustomNotFoundException('비밀번호가 일치하지 않습니다');
+        throw new CustomBadRequestException('비밀번호가 일치하지 않습니다');
       }
 
       return this.tokenService.generateToken(user.id, user.email);
     } catch (error) {
-      if (error instanceof CustomNotFoundException) {
+      if (error instanceof CustomNotFoundException || error instanceof CustomBadRequestException) {
         throw new CustomBadRequestException('유저 정보가 일치하지 않습니다.');
       }
 
