@@ -2,34 +2,32 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { CreateUserDTO } from '@user/application/dtos/create-user.dto';
 import { UserEntity } from '@user/domain/entities/user.entity';
+import { DuplicateEmailException, UserNotFoundException } from '@user/domain/exceptions/user-domain.exception';
 import { IUserRepository } from '@user/domain/i-repositories/user.repository.interface';
 import { IPasswordEncryptionService } from '@user/domain/services/password-encryption.service';
-import { UserDomainService } from '@user/domain/services/user-domain.service';
 import { PasswordVO } from '@user/domain/value-objects/password.vo';
-import { CustomNotFoundException } from '../../../common/exceptions';
 
 @Injectable()
 export class UserService {
-  private userDomainService: UserDomainService;
-
   constructor(
     @Inject('IUserRepository') private readonly userRepository: IUserRepository,
     @Inject('IPasswordEncryptionService') private readonly passwordEncryptionService: IPasswordEncryptionService,
-  ) {
-    this.userDomainService = new UserDomainService(this.userRepository);
-  }
+  ) {}
 
   async create(data: CreateUserDTO): Promise<UserEntity> {
-    await this.userDomainService.checkDuplicatedEmail(data.email);
+    // 중복 이메일 체크는 Application Service에서 처리
+    const existingUser = await this.userRepository.findUniqueByEmail(data.email);
+    if (existingUser) {
+      throw new DuplicateEmailException('이미 사용중인 이메일입니다');
+    }
 
-    const passwordVO = new PasswordVO(data.password);
-    const { hashedPassword, salt } = this.passwordEncryptionService.hashPassword(passwordVO);
+    const plainPassword = new PasswordVO(data.password);
 
     const user = UserEntity.create({
-      password: hashedPassword,
       email: data.email,
+      plainPassword,
       name: data.name,
-      salt,
+      encryptionService: this.passwordEncryptionService,
     });
 
     return this.userRepository.create(user);
@@ -37,14 +35,18 @@ export class UserService {
 
   async findUnique(id: number): Promise<UserEntity> {
     const user = await this.userRepository.findUniqueById(id);
-    if (!user) throw new CustomNotFoundException('존재하지 않는 유저입니다');
+    if (!user) {
+      throw new UserNotFoundException('존재하지 않는 유저입니다');
+    }
 
     return user;
   }
 
   async findUniqueByEmail(email: string): Promise<UserEntity> {
     const user = await this.userRepository.findUniqueByEmail(email);
-    if (!user) throw new CustomNotFoundException('존재하지 않는 유저입니다');
+    if (!user) {
+      throw new UserNotFoundException('존재하지 않는 유저입니다');
+    }
 
     return user;
   }

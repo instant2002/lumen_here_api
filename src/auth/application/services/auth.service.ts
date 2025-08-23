@@ -18,11 +18,7 @@ export class AuthService {
     try {
       const user = await this.userService.findUniqueByEmail(input.email);
 
-      const isPasswordValid = this.passwordEncryptionService.verifyPassword({
-        passwordVO: new PasswordVO(input.password),
-        hashedPassword: user.password,
-        salt: user.salt,
-      });
+      const isPasswordValid = user.verifyPassword(new PasswordVO(input.password), this.passwordEncryptionService);
 
       if (!isPasswordValid) {
         throw new CustomBadRequestException('비밀번호가 일치하지 않습니다');
