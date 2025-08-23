@@ -49,6 +49,33 @@ This is a NestJS GraphQL API (lumen_here_api_v2) built with TypeScript, Prisma O
 
 ## Architecture
 
+### DDD Layer Flow Policy
+
+**Layer Dependency Rules** (MUST follow these rules):
+
+```
+Presentation → Application → Domain ← Infrastructure
+```
+
+**Layer Responsibilities:**
+- **Presentation**: Handles external requests (GraphQL resolvers, REST controllers)
+- **Application**: Orchestrates use cases, manages transactions, calls domain services
+- **Domain**: Core business logic, entities, value objects, domain services (no external dependencies)
+- **Infrastructure**: External system integrations, implements domain interfaces (repositories, external APIs)
+
+**Dependency Direction Rules:**
+- Inner layers CANNOT depend on outer layers
+- Domain layer is the core - NO dependencies on other layers
+- Infrastructure implements domain interfaces (Dependency Inversion Principle)
+- Application layer coordinates between domain and infrastructure
+- Presentation layer only calls application layer
+
+**Forbidden Dependencies:**
+- ❌ Domain → Infrastructure (use interfaces instead)
+- ❌ Domain → Application  
+- ❌ Domain → Presentation
+- ❌ Presentation → Infrastructure (go through application)
+
 ### Module Structure
 
 Follows DDD layered architecture within each domain:
@@ -77,6 +104,15 @@ src/
 ```
 
 ### Key Patterns
+
+**Exception Handling**: Use custom exception classes from `@common/exceptions`:
+
+- `CustomBadRequestException` - 400 Bad Request errors
+- `CustomNotFoundException` - 404 Not Found errors  
+- `CustomUnauthorizedException` - 401 Unauthorized errors
+- `CustomForbiddenException` - 403 Forbidden errors
+- `CustomInternalServerException` - 500 Internal Server errors
+- All extend `BaseException` with consistent error structure
 
 **Dependency Injection**: Uses interface-based DI with token providers:
 
