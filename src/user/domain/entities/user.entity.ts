@@ -94,6 +94,16 @@ export class UserEntity {
     this._name = newName;
   }
 
+  toOutput(): { id: number; email: string; name: string; createdAt: Date; updatedAt: Date } {
+    return {
+      id: this.getId() || 0,
+      email: this.getEmail(),
+      name: this.getName(),
+      createdAt: this.getCreatedAt() || new Date(),
+      updatedAt: this.getUpdatedAt() || new Date(),
+    };
+  }
+
   private static validateName(name: string) {
     if (name.trim().length < 2) {
       throw new InvalidNameException('이름은 2자리 이상이어야 합니다');
@@ -131,28 +141,5 @@ export class UserEntity {
 
   getUpdatedAt(): Date | undefined {
     return this._updatedAt;
-  }
-
-  // Legacy getters for backward compatibility (제거 예정)
-  get id() {
-    return this.getId();
-  }
-  get email() {
-    return this.getEmail();
-  }
-  get name() {
-    return this.getName();
-  }
-  get password() {
-    return this.getHashedPassword();
-  }
-  get salt() {
-    return this.getSalt();
-  }
-  get createdAt() {
-    return this.getCreatedAt();
-  }
-  get updatedAt() {
-    return this.getUpdatedAt();
   }
 }

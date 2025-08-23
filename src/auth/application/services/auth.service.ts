@@ -24,7 +24,7 @@ export class AuthService {
         throw new CustomBadRequestException('비밀번호가 일치하지 않습니다');
       }
 
-      return this.tokenService.generateToken(user.id, user.email);
+      return this.tokenService.generateToken(user.getId(), user.getEmail());
     } catch (error) {
       if (error instanceof CustomNotFoundException || error instanceof CustomBadRequestException) {
         throw new CustomBadRequestException('유저 정보가 일치하지 않습니다.');

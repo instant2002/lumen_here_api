@@ -21,8 +21,6 @@ class MockUserRepository implements IUserRepository {
         password: 'hashedPassword',
         salt: 'salt',
       });
-      // Mock에서 id 설정
-      user.id = 1;
       return Promise.resolve(user);
     }
     return Promise.resolve(null);
@@ -92,10 +90,10 @@ describe('UserService', () => {
       const result = await service.create(createUserDTO);
 
       expect(result).toBeDefined();
-      expect(result.email).toBe(createUserDTO.email);
-      expect(result.name).toBe(createUserDTO.name);
-      expect(result.password).toBe('hashedPassword123');
-      expect(result.salt).toBe('salt123');
+      expect(result.getEmail()).toBe(createUserDTO.email);
+      expect(result.getName()).toBe(createUserDTO.name);
+      expect(result.getHashedPassword()).toBe('hashedPassword123');
+      expect(result.getSalt()).toBe('salt123');
     });
 
     it('should hash password before creating user', async () => {
@@ -118,8 +116,8 @@ describe('UserService', () => {
       const result = await service.findUnique(1);
 
       expect(result).toBeDefined();
-      expect(result?.id).toBe(1);
-      expect(result?.email).toBe('test@example.com');
+      expect(result?.getId()).toBe(1);
+      expect(result?.getEmail()).toBe('test@example.com');
     });
 
     it('should throw CustomNotFoundException when user does not exist', async () => {
