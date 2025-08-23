@@ -8,7 +8,7 @@
   "eslint.validate": ["typescript"],
   "eslint.workingDirectories": ["."],
   "eslint.format.enable": true,
-  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.suggest.autoImports": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "files.associations": {

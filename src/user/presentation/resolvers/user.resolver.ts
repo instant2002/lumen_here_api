@@ -10,12 +10,15 @@ export class UserResolver {
   @Query(() => UserOutput)
   async getUser(@Args('id', { type: () => Int }) id: number): Promise<UserOutput> {
     const user = await this.userService.findUnique(id);
-    return new UserOutput(user);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return new UserOutput(user.toOutput());
   }
 
   @Mutation(() => UserOutput, { nullable: true })
   async createUser(@Args('data') data: CreateUserInput): Promise<UserOutput> {
     const user = await this.userService.create(data);
-    return new UserOutput(user);
+    return new UserOutput(user.toOutput());
   }
 }

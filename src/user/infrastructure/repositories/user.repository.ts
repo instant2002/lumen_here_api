@@ -10,14 +10,22 @@ export class UserRepository implements IUserRepository {
   async create(user: UserEntity): Promise<UserEntity> {
     const createdUser = await this.prisma.user.create({
       data: {
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        salt: user.salt,
+        name: user.getName(),
+        email: user.getEmail(),
+        password: user.getHashedPassword(),
+        salt: user.getSalt(),
       },
     });
 
-    return new UserEntity(createdUser);
+    return UserEntity.reconstitute({
+      id: createdUser.id,
+      email: createdUser.email,
+      hashedPassword: createdUser.password,
+      salt: createdUser.salt,
+      name: createdUser.name,
+      createdAt: createdUser.createdAt,
+      updatedAt: createdUser.updatedAt,
+    });
   }
 
   async findUniqueById(id: number): Promise<UserEntity | null> {
@@ -27,7 +35,15 @@ export class UserRepository implements IUserRepository {
       return null;
     }
 
-    return new UserEntity(user);
+    return UserEntity.reconstitute({
+      id: user.id,
+      email: user.email,
+      hashedPassword: user.password,
+      salt: user.salt,
+      name: user.name,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
   }
 
   async findUniqueByEmail(email: string): Promise<UserEntity | null> {
@@ -37,6 +53,14 @@ export class UserRepository implements IUserRepository {
       return null;
     }
 
-    return new UserEntity(user);
+    return UserEntity.reconstitute({
+      id: user.id,
+      email: user.email,
+      hashedPassword: user.password,
+      salt: user.salt,
+      name: user.name,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
   }
 }
