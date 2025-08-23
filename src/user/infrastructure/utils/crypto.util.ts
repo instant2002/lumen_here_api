@@ -9,15 +9,15 @@ export class CryptoPasswordEncryptionService implements IPasswordEncryptionServi
   private readonly keyLength = 64;
   private readonly digest = 'sha512';
 
-  hashPassword(passwordVO: PasswordVO): { hashedPassword: string; salt: string } {
-    const salt = this.generateSalt();
+  hashPassword(passwordVO: PasswordVO, salt?: string): { hashedPassword: string; salt: string } {
+    const usedSalt = salt || this.generateSalt();
     const hashedPassword = crypto
-      .pbkdf2Sync(passwordVO.getValue(), salt, this.saltRounds, this.keyLength, this.digest)
+      .pbkdf2Sync(passwordVO.getValue(), usedSalt, this.saltRounds, this.keyLength, this.digest)
       .toString('hex');
 
     return {
       hashedPassword,
-      salt,
+      salt: usedSalt,
     };
   }
 
